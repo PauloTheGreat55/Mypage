@@ -1,0 +1,245 @@
+@import "tailwindcss";
+
+@theme {
+  --font-heading: 'Instrument Serif', Georgia, serif;
+  --font-body: 'Barlow', -apple-system, BlinkMacSystemFont, sans-serif;
+  --color-dark-900: #000000;
+  --color-dark-800: #0a0a0a;
+  --color-dark-700: #141414;
+}
+
+/* Scroll Container & Base Snapping */
+html, body {
+  background-color: #000000;
+  color: #ffffff;
+  font-family: 'Barlow', -apple-system, BlinkMacSystemFont, sans-serif;
+  overflow: hidden;
+  height: 100%;
+}
+
+.story-scroll-container {
+  height: 100vh;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.story-section {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  min-height: 100vh;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  view-timeline-name: --section;
+  view-timeline-axis: block;
+}
+
+/* Custom fonts helper classes */
+.font-heading {
+  font-family: 'Instrument Serif', Georgia, serif;
+}
+.font-body {
+  font-family: 'Barlow', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Liquid Glass Utilities */
+.liquid-glass {
+  background: rgba(255, 255, 255, 0.025);
+  background-blend-mode: luminosity;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: none;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.liquid-glass::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.2px;
+  background: linear-gradient(180deg,
+      rgba(255, 255, 255, 0.45) 0%,
+      rgba(255, 255, 255, 0.15) 20%,
+      rgba(255, 255, 255, 0.02) 40%,
+      rgba(255, 255, 255, 0.02) 60%,
+      rgba(255, 255, 255, 0.15) 80%,
+      rgba(255, 255, 255, 0.45) 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.liquid-glass-strong {
+  background: rgba(255, 255, 255, 0.05);
+  background-blend-mode: luminosity;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.25);
+  position: relative;
+  overflow: hidden;
+}
+
+.liquid-glass-strong::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.4px;
+  background: linear-gradient(180deg,
+      rgba(255, 255, 255, 0.6) 0%,
+      rgba(255, 255, 255, 0.25) 20%,
+      rgba(255, 255, 255, 0.05) 40%,
+      rgba(255, 255, 255, 0.05) 60%,
+      rgba(255, 255, 255, 0.25) 80%,
+      rgba(255, 255, 255, 0.6) 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.liquid-card {
+  background: rgba(255, 255, 255, 0.015);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.12);
+  border-radius: 1.25rem;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.liquid-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.2px;
+  background: linear-gradient(180deg,
+      rgba(255, 255, 255, 0.32) 0%,
+      rgba(255, 255, 255, 0.05) 50%,
+      rgba(255, 255, 255, 0.2) 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.liquid-card:hover {
+  background: rgba(255, 255, 255, 0.035);
+  transform: translateY(-2px);
+  box-shadow: 0 20px 45px -5px rgba(0, 0, 0, 0.8), inset 0 1px 1px rgba(255, 255, 255, 0.25);
+}
+
+/* ========================================================
+   PURE CSS SCROLL-DRIVEN ANIMATIONS
+   (Using animation-timeline: view() and named timelines)
+   ======================================================== */
+@keyframes heroShrinkAnim {
+  0% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+    filter: blur(0px);
+  }
+  100% {
+    transform: scale(0.85) translateY(-60px);
+    opacity: 0.2;
+    filter: blur(8px);
+  }
+}
+
+@keyframes clipEllipseAnim {
+  0% {
+    clip-path: ellipse(28% 18% at 50% 50%);
+    opacity: 0.4;
+    transform: scale(1.15);
+  }
+  100% {
+    clip-path: ellipse(120% 120% at 50% 50%);
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes imageZoomRevealAnim {
+  0% {
+    transform: scale(1.35);
+    filter: brightness(0.4) blur(4px);
+  }
+  100% {
+    transform: scale(1);
+    filter: brightness(1) blur(0px);
+  }
+}
+
+@keyframes kineticTitleEnterAnim {
+  0% {
+    transform: translateY(70px);
+    opacity: 0;
+    filter: blur(6px);
+  }
+  50% {
+    transform: translateY(0);
+    opacity: 1;
+    filter: blur(0px);
+  }
+  100% {
+    transform: translateY(-40px);
+    opacity: 0.2;
+    filter: blur(10px);
+  }
+}
+
+@keyframes kineticBlurExitAnim {
+  0% {
+    opacity: 1;
+    filter: blur(0px);
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    filter: blur(14px);
+    transform: translateY(-50px);
+  }
+}
+
+.kinetic-blur-target {
+  animation: kineticBlurExitAnim linear both;
+  animation-timeline: view();
+  animation-range: exit 10% exit 90%;
+}
+
+/* Subtle luxury pulse and glow */
+@keyframes ambientGlow {
+  0%, 100% { opacity: 0.15; transform: scale(1); }
+  50% { opacity: 0.28; transform: scale(1.05); }
+}
+
+.animate-ambient-glow {
+  animation: ambientGlow 8s ease-in-out infinite;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+}
+::-webkit-scrollbar-track {
+  background: #000000;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
