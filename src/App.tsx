@@ -532,22 +532,22 @@ export default function App() {
       </div>
 
       {/* Floating Header */}
-      <header className="fixed top-5 left-0 right-0 z-50 px-6 sm:px-12 flex justify-between items-center pointer-events-none">
+      <header className="fixed top-3 sm:top-5 left-0 right-0 z-50 px-4 sm:px-6 lg:px-12 flex justify-between items-center pointer-events-none">
         {/* Brand Logo */}
         <button
           onClick={() => scrollToStage(0)}
-          className="pointer-events-auto w-11 h-11 liquid-glass rounded-2xl flex items-center justify-center font-heading italic text-2xl text-white hover:scale-105 transition-transform cursor-pointer"
+          className="pointer-events-auto w-10 h-10 sm:w-11 sm:h-11 liquid-glass rounded-2xl flex items-center justify-center font-heading italic text-xl sm:text-2xl text-white hover:scale-105 transition-transform cursor-pointer touch-manipulation"
         >
           P
         </button>
 
         {/* Story Progress Indicator */}
-        <nav className="pointer-events-auto hidden md:flex items-center liquid-glass px-3 py-1.5 gap-2 rounded-full shadow-2xl">
+        <nav className="pointer-events-auto hidden md:flex items-center liquid-glass px-2 sm:px-3 py-1.5 gap-1.5 sm:gap-2 rounded-full shadow-2xl">
           {STORY_STAGES.map((s, idx) => (
             <button
               key={s.id}
               onClick={() => scrollToStage(idx)}
-              className={`px-3 py-1 text-xs font-medium tracking-wide rounded-full transition-all flex items-center gap-1.5 cursor-pointer ${
+              className={`px-2 sm:px-3 py-1 text-[10px] sm:text-xs font-medium tracking-wide rounded-full transition-all flex items-center gap-1 sm:gap-1.5 cursor-pointer touch-manipulation ${
                 activeStoryStage === idx
                   ? 'bg-white/20 text-white font-semibold shadow-inner'
                   : 'text-white/60 hover:text-white'
@@ -558,12 +558,12 @@ export default function App() {
                   activeStoryStage === idx ? 'bg-emerald-400' : 'bg-white/30'
                 }`}
               />
-              <span>{s.name}</span>
+              <span className="hidden lg:inline">{s.name}</span>
             </button>
           ))}
           <button
             onClick={() => scrollToStage(4)}
-            className="ml-2 px-3.5 py-1 rounded-full bg-white text-black font-semibold text-xs hover:bg-white/90 transition-all flex items-center gap-1 cursor-pointer"
+            className="ml-1 sm:ml-2 px-2.5 sm:px-3.5 py-1 rounded-full bg-white text-black font-semibold text-[10px] sm:text-xs hover:bg-white/90 transition-all flex items-center gap-1 cursor-pointer touch-manipulation"
           >
             <span>Let's Talk</span>
             <ArrowUpRight className="w-3 h-3" />
@@ -579,33 +579,33 @@ export default function App() {
               playSubtleClick();
             }}
             title={soundEnabled ? 'Mute audio feedback' : 'Enable audio feedback'}
-            className="w-10 h-10 liquid-glass rounded-full hidden sm:flex items-center justify-center text-white/70 hover:text-white transition-colors cursor-pointer"
+            className="w-9 h-9 sm:w-10 sm:h-10 liquid-glass rounded-full hidden sm:flex items-center justify-center text-white/70 hover:text-white transition-colors cursor-pointer touch-manipulation"
           >
             {soundEnabled ? (
-              <Volume2 className="w-4 h-4 text-emerald-400" />
+              <Volume2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-400" />
             ) : (
-              <VolumeX className="w-4 h-4 text-white/40" />
+              <VolumeX className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white/40" />
             )}
           </button>
 
           {/* Mobile menu */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden w-11 h-11 liquid-glass rounded-2xl flex flex-col items-center justify-center gap-1.5 focus:outline-none cursor-pointer"
+            className="md:hidden w-10 h-10 sm:w-11 sm:h-11 liquid-glass rounded-2xl flex flex-col items-center justify-center gap-1.5 focus:outline-none cursor-pointer touch-manipulation"
             aria-label="Toggle Navigation"
           >
             <span
-              className={`w-5 h-0.5 bg-white transition-all ${
+              className={`w-4 sm:w-5 h-0.5 bg-white transition-all ${
                 mobileMenuOpen ? 'rotate-45 translate-y-2' : ''
               }`}
             />
             <span
-              className={`w-5 h-0.5 bg-white transition-all ${
+              className={`w-4 sm:w-5 h-0.5 bg-white transition-all ${
                 mobileMenuOpen ? 'opacity-0' : ''
               }`}
             />
             <span
-              className={`w-5 h-0.5 bg-white transition-all ${
+              className={`w-4 sm:w-5 h-0.5 bg-white transition-all ${
                 mobileMenuOpen ? '-rotate-45 -translate-y-2' : ''
               }`}
             />
@@ -649,9 +649,9 @@ export default function App() {
         {/* ========================================================
             STAGE 1: OVERVIEW & TECH STACK (HERO SECTION)
             ======================================================== */}
-        <section id="stage-0" className="story-section px-6 lg:px-12">
-          <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-10 items-center hero-shrink-target">
-            <div className="lg:col-span-7 space-y-5 text-center lg:text-left">
+        <section id="stage-0" className="story-section px-4 sm:px-6 lg:px-12">
+          <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-10 items-center hero-shrink-target">
+            <div className="lg:col-span-7 space-y-4 sm:space-y-5 text-center lg:text-left">
               {/* Badges */}
               <div className="inline-flex flex-wrap items-center justify-center lg:justify-start gap-2">
                 <div className="inline-flex items-center liquid-glass rounded-full p-1 pl-3 text-xs text-white/90 gap-2.5 border border-white/10">
@@ -674,7 +674,7 @@ export default function App() {
               </div>
 
               {/* Headline */}
-              <h1 className="text-5xl sm:text-7xl lg:text-[5.5rem] font-heading italic text-white leading-[0.92] tracking-tight">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-[5.5rem] font-heading italic text-white leading-[0.92] tracking-tight">
                 Hi, I'm{' '}
                 <span className="text-white/90 underline decoration-white/20 underline-offset-8">
                   Paulo Peñaflor
@@ -692,23 +692,23 @@ export default function App() {
               </div>
 
               {/* Dynamic Typewriter */}
-              <div className="text-xl sm:text-2xl font-light text-white/80 h-9 flex items-center justify-center lg:justify-start">
-                <span className="text-white/50 mr-2 text-lg">Focus:</span>
+              <div className="text-lg sm:text-xl md:text-2xl font-light text-white/80 min-h-[2.5rem] flex items-center justify-center lg:justify-start">
+                <span className="text-white/50 mr-2 text-base sm:text-lg">Focus:</span>
                 <span className="font-medium text-white border-r-2 border-emerald-400 pr-1 animate-pulse">
                   {displayText}
                 </span>
               </div>
 
               {/* Bio highlighting BSCS, IT Support, VA */}
-              <p className="text-white/80 text-base sm:text-lg max-w-xl mx-auto lg:mx-0 font-light leading-relaxed">
+              <p className="text-white/80 text-sm sm:text-base lg:text-lg max-w-xl mx-auto lg:mx-0 font-light leading-relaxed">
                 I'm Paulo Peñaflor, a BSCS graduate (Major in Programming), Technical Virtual Assistant, and IT Support Specialist. With a solid Computer Science background, I combine technical diagnostics, automation scripting, and organizational discipline to manage calendars across conflicting time zones, troubleshoot systems, achieve Inbox Zero, and optimize operations for fast-moving teams.
               </p>
 
               {/* Action Buttons */}
-              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3.5 pt-2">
+              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 sm:gap-3.5 pt-2">
                 <button
                   onClick={() => scrollToStage(4)}
-                  className="liquid-glass-strong rounded-full px-6 py-2.5 text-sm font-medium text-white flex items-center gap-2 hover:bg-white/15 transition-all shadow-lg cursor-pointer"
+                  className="liquid-glass-strong rounded-full px-5 sm:px-6 py-2.5 text-sm font-medium text-white flex items-center gap-2 hover:bg-white/15 transition-all shadow-lg cursor-pointer touch-manipulation"
                 >
                   <span>Get In Touch</span>
                   <ArrowUpRight className="w-4 h-4" />
@@ -716,7 +716,7 @@ export default function App() {
 
                 <button
                   onClick={() => scrollToStage(1)}
-                  className="liquid-glass rounded-full px-6 py-2.5 text-sm font-medium text-white/90 hover:text-white hover:bg-white/10 transition-all flex items-center gap-2 cursor-pointer"
+                  className="liquid-glass rounded-full px-5 sm:px-6 py-2.5 text-sm font-medium text-white/90 hover:text-white hover:bg-white/10 transition-all flex items-center gap-2 cursor-pointer touch-manipulation"
                 >
                   <span>Explore Tech Rig</span>
                   <ChevronDown className="w-4 h-4 text-emerald-400 animate-bounce" />
@@ -724,7 +724,7 @@ export default function App() {
               </div>
 
               {/* Proof highlights */}
-              <div className="pt-2 flex flex-wrap items-center justify-center lg:justify-start gap-4 text-xs text-white/70">
+              <div className="pt-2 flex flex-wrap items-center justify-center lg:justify-start gap-3 sm:gap-4 text-xs text-white/70">
                 <div className="flex items-center gap-1.5">
                   <Terminal className="w-3.5 h-3.5 text-emerald-400" />
                   <span>BSCS Programming Major</span>
@@ -745,10 +745,10 @@ export default function App() {
             </div>
 
             {/* Right Card with Permanent Official Portrait */}
-            <div className="lg:col-span-5 flex flex-col items-center">
-              <div className="relative w-full max-w-xs sm:max-w-sm group">
+            <div className="lg:col-span-5 flex flex-col items-center mt-6 lg:mt-0">
+              <div className="relative w-full max-w-[280px] sm:max-w-xs md:max-w-sm group">
                 <div className="absolute -inset-1 rounded-3xl bg-gradient-to-b from-white/20 via-emerald-500/10 to-transparent blur-md opacity-70 group-hover:opacity-100 transition duration-700" />
-                <div className="relative liquid-card p-4">
+                <div className="relative liquid-card p-3 sm:p-4">
                   <div className="relative overflow-hidden rounded-2xl aspect-[3/4] bg-neutral-900 shadow-2xl">
                     <img
                       src={currentPhotoSrc}
@@ -763,7 +763,7 @@ export default function App() {
                       </span>
                     </div>
 
-                    <div className="absolute bottom-4 left-4 right-4 pointer-events-none">
+                    <div className="absolute bottom-3 sm:bottom-4 left-3 sm:left-4 right-3 sm:right-4 pointer-events-none">
                       <div className="text-xs uppercase tracking-wider text-emerald-400 font-semibold mb-0.5">
                         Paulo Peñaflor
                       </div>
@@ -781,21 +781,21 @@ export default function App() {
         {/* ========================================================
             STAGE 2: PAULO'S TECHNICAL WORKSPACE & HARDWARE RIG (WINDOWS)
             ======================================================== */}
-        <section id="stage-1" className="story-section px-6 lg:px-12">
+        <section id="stage-1" className="story-section px-4 sm:px-6 lg:px-12">
           <div className="max-w-6xl mx-auto w-full clip-reveal-target">
-            <div className="liquid-card p-6 sm:p-10 border border-white/15 bg-neutral-950/80 backdrop-blur-2xl shadow-2xl relative overflow-hidden">
+            <div className="liquid-card p-4 sm:p-6 lg:p-10 border border-white/15 bg-neutral-950/80 backdrop-blur-2xl shadow-2xl relative overflow-hidden">
               {/* Header */}
-              <div className="pb-6 border-b border-white/10">
+              <div className="pb-4 sm:pb-6 border-b border-white/10">
                 <span className="text-xs uppercase font-mono tracking-widest text-emerald-400 block mb-1">
                   {workspaceSpecs.subtitle}
                 </span>
-                <h2 className="text-3xl sm:text-5xl font-heading italic text-white">
+                <h2 className="text-2xl sm:text-3xl lg:text-5xl font-heading italic text-white">
                   {workspaceSpecs.title}
                 </h2>
               </div>
 
               {/* Workspace Content Grid */}
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center pt-6">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 lg:gap-8 items-center pt-4 sm:pt-6">
                 {/* Finalized Workspace photo */}
                 <div className="lg:col-span-5 relative group">
                   <div className="relative rounded-2xl overflow-hidden aspect-[4/3] bg-neutral-900 border border-white/10 shadow-xl">
@@ -814,17 +814,17 @@ export default function App() {
                 </div>
 
                 {/* Finalized Hardware Specs & Windows Rig */}
-                <div className="lg:col-span-7 space-y-5">
-                  <div className="p-3.5 rounded-xl liquid-glass border border-emerald-500/20">
+                <div className="lg:col-span-7 space-y-4 sm:space-y-5">
+                  <div className="p-3 sm:p-3.5 rounded-xl liquid-glass border border-emerald-500/20">
                     <span className="text-xs text-emerald-400 font-semibold block mb-0.5">
                       Core Hardware Configuration:
                     </span>
-                    <p className="text-white text-base sm:text-lg font-medium">
+                    <p className="text-white text-sm sm:text-base lg:text-lg font-medium">
                       {workspaceSpecs.hardwareHeadline}
                     </p>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-white/80">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3 text-xs text-white/80">
                     {/* Mobile Hub */}
                     <div className="liquid-glass p-3 rounded-xl flex items-start gap-2.5">
                       <Smartphone className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
@@ -863,7 +863,7 @@ export default function App() {
                   </div>
 
                   {/* Personal Work Quote */}
-                  <blockquote className="p-4 rounded-xl liquid-glass border-l-2 border-emerald-400 text-white/90 italic text-sm leading-relaxed">
+                  <blockquote className="p-3 sm:p-4 rounded-xl liquid-glass border-l-2 border-emerald-400 text-white/90 italic text-xs sm:text-sm leading-relaxed">
                     "{workspaceSpecs.quote}"
                   </blockquote>
                 </div>
@@ -875,51 +875,51 @@ export default function App() {
         {/* ========================================================
             STAGE 3: THE ACCOUNTS & IMPACT MATRIX (IMAGE ZOOM & KINETIC TYPOGRAPHY)
             ======================================================== */}
-        <section id="stage-2" className="story-section px-6 lg:px-12">
-          <div className="max-w-6xl mx-auto w-full space-y-8">
-            <div className="text-center space-y-3 kinetic-title-target">
+        <section id="stage-2" className="story-section px-4 sm:px-6 lg:px-12">
+          <div className="max-w-6xl mx-auto w-full space-y-6 sm:space-y-8">
+            <div className="text-center space-y-2 sm:space-y-3 kinetic-title-target">
               <span className="text-xs uppercase font-mono tracking-widest text-emerald-400">
                 Scale & Track Record
               </span>
-              <h2 className="text-4xl sm:text-6xl font-heading italic text-white">
+              <h2 className="text-3xl sm:text-4xl lg:text-6xl font-heading italic text-white">
                 Accounts & Operational Impact
               </h2>
-              <p className="text-white/60 text-sm sm:text-base font-light max-w-2xl mx-auto">
+              <p className="text-white/60 text-xs sm:text-sm lg:text-base font-light max-w-2xl mx-auto px-4">
                 Proven benchmarks delivered across high-touch remote operations, client management, and technical environments.
               </p>
             </div>
 
             {/* Big Stat Cards with zoom effect */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-5 image-zoom-target">
-              <div className="liquid-card p-6 text-center group border border-emerald-500/20 bg-emerald-950/10">
-                <div className="text-4xl sm:text-6xl font-heading italic text-emerald-400 mb-1">8+</div>
-                <div className="text-white font-medium text-sm">Model Accounts</div>
-                <div className="text-[11px] text-white/50 mt-1">Direct Client Management</div>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-5 image-zoom-target">
+              <div className="liquid-card p-4 sm:p-5 lg:p-6 text-center group border border-emerald-500/20 bg-emerald-950/10">
+                <div className="text-3xl sm:text-4xl lg:text-6xl font-heading italic text-emerald-400 mb-1">8+</div>
+                <div className="text-white font-medium text-xs sm:text-sm">Model Accounts</div>
+                <div className="text-[10px] sm:text-[11px] text-white/50 mt-1">Direct Client Management</div>
               </div>
 
-              <div className="liquid-card p-6 text-center group border border-amber-500/20 bg-amber-950/10">
-                <div className="text-4xl sm:text-6xl font-heading italic text-amber-300 mb-1">3</div>
-                <div className="text-white font-medium text-sm">Agency & Brand Accounts</div>
-                <div className="text-[11px] text-white/50 mt-1">Cross-brand Operations</div>
+              <div className="liquid-card p-4 sm:p-5 lg:p-6 text-center group border border-amber-500/20 bg-amber-950/10">
+                <div className="text-3xl sm:text-4xl lg:text-6xl font-heading italic text-amber-300 mb-1">3</div>
+                <div className="text-white font-medium text-xs sm:text-sm">Agency & Brand Accounts</div>
+                <div className="text-[10px] sm:text-[11px] text-white/50 mt-1">Cross-brand Operations</div>
               </div>
 
-              <div className="liquid-card p-6 text-center group">
-                <div className="text-4xl sm:text-6xl font-heading italic text-white mb-1">1+</div>
-                <div className="text-white font-medium text-sm">Yr at One Up Media</div>
-                <div className="text-[11px] text-white/50 mt-1">Virtual Assistant (2023 – Present)</div>
+              <div className="liquid-card p-4 sm:p-5 lg:p-6 text-center group">
+                <div className="text-3xl sm:text-4xl lg:text-6xl font-heading italic text-white mb-1">1+</div>
+                <div className="text-white font-medium text-xs sm:text-sm">Yr at One Up Media</div>
+                <div className="text-[10px] sm:text-[11px] text-white/50 mt-1">Virtual Assistant (2023 – Present)</div>
               </div>
 
-              <div className="liquid-card p-6 text-center group">
-                <div className="text-4xl sm:text-6xl font-heading italic text-white mb-1">96%+</div>
-                <div className="text-white font-medium text-sm">Satisfaction Benchmark</div>
-                <div className="text-[11px] text-white/50 mt-1">&lt;2 Min Response Target</div>
+              <div className="liquid-card p-4 sm:p-5 lg:p-6 text-center group">
+                <div className="text-3xl sm:text-4xl lg:text-6xl font-heading italic text-white mb-1">96%+</div>
+                <div className="text-white font-medium text-xs sm:text-sm">Satisfaction Benchmark</div>
+                <div className="text-[10px] sm:text-[11px] text-white/50 mt-1">&lt;2 Min Response Target</div>
               </div>
             </div>
 
             {/* Experience Narrative with IT and Programming depth */}
-            <div className="liquid-card p-6 sm:p-8 grid grid-cols-1 md:grid-cols-2 gap-6 text-xs sm:text-sm text-white/80 font-light leading-relaxed">
+            <div className="liquid-card p-4 sm:p-6 lg:p-8 grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 text-xs sm:text-sm text-white/80 font-light leading-relaxed">
               <div>
-                <h4 className="text-white text-base font-medium mb-2 flex items-center gap-2">
+                <h4 className="text-white text-sm sm:text-base font-medium mb-2 flex items-center gap-2">
                   <Briefcase className="w-4 h-4 text-emerald-400" />
                   <span>One Up Media (Technical Virtual Assistant)</span>
                 </h4>
@@ -929,7 +929,7 @@ export default function App() {
               </div>
 
               <div>
-                <h4 className="text-white text-base font-medium mb-2 flex items-center gap-2">
+                <h4 className="text-white text-sm sm:text-base font-medium mb-2 flex items-center gap-2">
                   <MessageSquare className="w-4 h-4 text-blue-400" />
                   <span>Digital Communication Services (Chatter & Support)</span>
                 </h4>
@@ -940,12 +940,12 @@ export default function App() {
             </div>
 
             {/* Practical Skills & Technical Foundations */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-3">
               {SKILLS_DATA.map((skill) => (
-                <div key={skill.id} className="liquid-glass p-3 rounded-xl text-center space-y-1">
-                  <div className="text-lg">{skill.icon}</div>
-                  <div className="text-[11px] text-white font-medium leading-tight">{skill.name}</div>
-                  <div className="text-[10px] text-emerald-400">{skill.level}</div>
+                <div key={skill.id} className="liquid-glass p-2.5 sm:p-3 rounded-xl text-center space-y-1">
+                  <div className="text-base sm:text-lg">{skill.icon}</div>
+                  <div className="text-[10px] sm:text-[11px] text-white font-medium leading-tight">{skill.name}</div>
+                  <div className="text-[9px] sm:text-[10px] text-emerald-400">{skill.level}</div>
                 </div>
               ))}
             </div>
@@ -955,21 +955,21 @@ export default function App() {
         {/* ========================================================
             STAGE 4: COMPUTER SCIENCE DEGREE, IT SUPPORT & CERTIFICATIONS
             ======================================================== */}
-        <section id="stage-3" className="story-section px-6 lg:px-12">
-          <div className="max-w-6xl mx-auto w-full space-y-8">
+        <section id="stage-3" className="story-section px-4 sm:px-6 lg:px-12">
+          <div className="max-w-6xl mx-auto w-full space-y-6 sm:space-y-8">
             <div className="text-center space-y-2">
               <span className="text-xs uppercase font-mono tracking-widest text-emerald-400">
                 Education & Credentials
               </span>
-              <h2 className="text-4xl sm:text-6xl font-heading italic text-white">
+              <h2 className="text-3xl sm:text-4xl lg:text-6xl font-heading italic text-white">
                 Education & Verified Credentials
               </h2>
-              <p className="text-white/60 text-xs sm:text-sm font-light">
+              <p className="text-white/60 text-xs sm:text-sm font-light px-4">
                 Computer Science degree with major in programming, IT support expertise, and Google Skillshop certifications.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-5">
               {/* 1. BSCS Graduate Degree */}
               <div
                 onClick={() => {
@@ -1139,30 +1139,30 @@ export default function App() {
         {/* ========================================================
             STAGE 5: DIRECT INQUIRY & CONTACT
             ======================================================== */}
-        <section id="stage-4" className="story-section px-6 lg:px-12">
+        <section id="stage-4" className="story-section px-4 sm:px-6 lg:px-12">
           <div className="max-w-6xl mx-auto w-full">
-            <div className="text-center mb-10 space-y-2">
+            <div className="text-center mb-6 sm:mb-8 lg:mb-10 space-y-2">
               <span className="text-xs uppercase font-mono tracking-widest text-emerald-400">
                 Direct Inquiry
               </span>
-              <h2 className="text-4xl sm:text-6xl font-heading italic text-white">
+              <h2 className="text-3xl sm:text-4xl lg:text-6xl font-heading italic text-white">
                 Get In Touch
               </h2>
-              <p className="text-white/60 text-xs sm:text-sm font-light">
+              <p className="text-white/60 text-xs sm:text-sm font-light px-4">
                 Ready to coordinate your schedule, handle IT support, and streamline remote operations.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-              <div className="lg:col-span-5 space-y-4">
-                <div className="liquid-card p-5 flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-full liquid-glass flex items-center justify-center text-emerald-400">
-                      <Mail className="w-4 h-4" />
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 lg:gap-8 items-start">
+              <div className="lg:col-span-5 space-y-3 sm:space-y-4">
+                <div className="liquid-card p-4 sm:p-5 flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+                    <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full liquid-glass flex items-center justify-center text-emerald-400 shrink-0">
+                      <Mail className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                     </div>
-                    <div>
-                      <h4 className="text-white/50 text-[11px]">Direct Email</h4>
-                      <div className="text-white font-medium text-sm select-all">
+                    <div className="min-w-0">
+                      <h4 className="text-white/50 text-[10px] sm:text-[11px]">Direct Email</h4>
+                      <div className="text-white font-medium text-xs sm:text-sm select-all truncate">
                         paulopenaflor55@gmail.com
                       </div>
                     </div>
@@ -1170,21 +1170,21 @@ export default function App() {
 
                   <button
                     onClick={handleCopyEmail}
-                    className="p-2 rounded-full liquid-glass hover:bg-white/10 text-white/80 hover:text-white transition-all text-xs cursor-pointer"
+                    className="p-2 rounded-full liquid-glass hover:bg-white/10 text-white/80 hover:text-white transition-all text-xs cursor-pointer touch-manipulation shrink-0"
                     title="Copy email"
                   >
-                    {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+                    {copied ? <Check className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-400" /> : <Copy className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
                   </button>
                 </div>
 
-                <div className="liquid-card p-5 flex items-center gap-3.5">
-                  <div className="w-9 h-9 rounded-full liquid-glass flex items-center justify-center text-blue-400 shrink-0">
-                    <Globe className="w-4 h-4" />
+                <div className="liquid-card p-4 sm:p-5 flex items-center gap-2.5 sm:gap-3.5">
+                  <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full liquid-glass flex items-center justify-center text-blue-400 shrink-0">
+                    <Globe className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   </div>
-                  <div>
-                    <h4 className="text-white/50 text-[11px]">Availability & Location</h4>
+                  <div className="min-w-0">
+                    <h4 className="text-white/50 text-[10px] sm:text-[11px]">Availability & Location</h4>
                     <p className="text-white font-medium text-xs sm:text-sm">Worldwide Remote (Flexible Timezones)</p>
-                    <p className="text-white/60 text-[11px] mt-0.5 flex items-center gap-1.5">
+                    <p className="text-white/60 text-[10px] sm:text-[11px] mt-0.5 flex items-center gap-1.5">
                       <Clock className="w-3 h-3 text-emerald-400" />
                       <span>Manila Local Time: {pauloTime || 'Active (GMT+8)'}</span>
                     </p>
@@ -1192,15 +1192,15 @@ export default function App() {
                 </div>
 
                 {/* Social Media Section */}
-                <div className="liquid-card p-5 space-y-3">
+                <div className="liquid-card p-4 sm:p-5 space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-[11px] text-white/50 uppercase tracking-wider font-mono">
+                    <span className="text-[10px] sm:text-[11px] text-white/50 uppercase tracking-wider font-mono">
                       Social Media & Profiles
                     </span>
-                    <span className="text-[10px] text-emerald-400 font-mono">Direct Links</span>
+                    <span className="text-[9px] sm:text-[10px] text-emerald-400 font-mono">Direct Links</span>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5">
                     {/* LinkedIn */}
                     <div className="p-3 rounded-xl liquid-glass border border-white/10 hover:border-blue-500/40 hover:bg-blue-950/20 transition-all flex items-center justify-between group">
                       <a
@@ -1277,8 +1277,8 @@ export default function App() {
                   </div>
                 </div>
 
-                <div className="liquid-card p-5">
-                  <span className="text-[11px] text-white/50 uppercase tracking-wider block mb-2">
+                <div className="liquid-card p-4 sm:p-5">
+                  <span className="text-[10px] sm:text-[11px] text-white/50 uppercase tracking-wider block mb-2">
                     Quick Inquiry Preset:
                   </span>
                   <div className="flex flex-wrap gap-1.5">
@@ -1299,7 +1299,7 @@ export default function App() {
                           }));
                           playSubtleClick();
                         }}
-                        className="px-2.5 py-1 liquid-glass rounded-lg text-[11px] text-white/80 hover:text-white cursor-pointer"
+                        className="px-2.5 py-1 liquid-glass rounded-lg text-[10px] sm:text-[11px] text-white/80 hover:text-white cursor-pointer touch-manipulation"
                       >
                         + {tpl}
                       </button>
@@ -1310,47 +1310,47 @@ export default function App() {
 
               {/* Form */}
               <div className="lg:col-span-7">
-                <form onSubmit={handleFormSubmit} className="liquid-card p-6 sm:p-8 space-y-4">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <form onSubmit={handleFormSubmit} className="liquid-card p-4 sm:p-6 lg:p-8 space-y-3 sm:space-y-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-3.5">
                     <div>
-                      <label className="block text-[11px] font-medium text-white/70 mb-1">Your Name *</label>
+                      <label className="block text-[10px] sm:text-[11px] font-medium text-white/70 mb-1">Your Name *</label>
                       <input
                         type="text"
                         required
                         placeholder="e.g. Alex Rivera"
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                        className="w-full px-4 py-2.5 rounded-full bg-white/5 border border-white/10 text-white placeholder-white/30 text-xs focus:outline-none focus:border-white"
+                        className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-full bg-white/5 border border-white/10 text-white placeholder-white/30 text-xs focus:outline-none focus:border-white touch-manipulation"
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] font-medium text-white/70 mb-1">Your Email *</label>
+                      <label className="block text-[10px] sm:text-[11px] font-medium text-white/70 mb-1">Your Email *</label>
                       <input
                         type="email"
                         required
                         placeholder="alex@company.com"
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        className="w-full px-4 py-2.5 rounded-full bg-white/5 border border-white/10 text-white placeholder-white/30 text-xs focus:outline-none focus:border-white"
+                        className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-full bg-white/5 border border-white/10 text-white placeholder-white/30 text-xs focus:outline-none focus:border-white touch-manipulation"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-medium text-white/70 mb-1">Message *</label>
+                    <label className="block text-[10px] sm:text-[11px] font-medium text-white/70 mb-1">Message *</label>
                     <textarea
-                      rows={3}
+                      rows={4}
                       required
                       placeholder="Tell Paulo about your project, team goals, IT troubleshooting needs, or workflow bottlenecks..."
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                      className="w-full px-4 py-3 rounded-2xl bg-white/5 border border-white/10 text-white placeholder-white/30 text-xs focus:outline-none focus:border-white resize-none"
+                      className="w-full px-3 sm:px-4 py-3 rounded-2xl bg-white/5 border border-white/10 text-white placeholder-white/30 text-xs focus:outline-none focus:border-white resize-none touch-manipulation"
                     />
                   </div>
 
                   <button
                     type="submit"
-                    className="w-full py-3 rounded-full bg-white text-black font-semibold text-xs hover:bg-white/90 transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-lg"
+                    className="w-full py-3 sm:py-3.5 rounded-full bg-white text-black font-semibold text-xs sm:text-sm hover:bg-white/90 transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-lg touch-manipulation"
                   >
                     <Send className="w-3.5 h-3.5" />
                     <span>Send Message to Paulo</span>

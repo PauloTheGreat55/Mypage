@@ -15,29 +15,59 @@ html, body {
   font-family: 'Barlow', -apple-system, BlinkMacSystemFont, sans-serif;
   overflow: hidden;
   height: 100%;
+  width: 100%;
+  position: fixed;
+  margin: 0;
+  padding: 0;
+  /* Prevent mobile bounce/overscroll */
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Fix iOS viewport height issues */
+@supports (-webkit-touch-callout: none) {
+  html, body {
+    height: -webkit-fill-available;
+  }
 }
 
 .story-scroll-container {
   height: 100vh;
+  height: 100dvh; /* Dynamic viewport height for mobile browsers */
   overflow-y: scroll;
   scroll-snap-type: y mandatory;
   scroll-behavior: smooth;
   position: relative;
   overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
 }
 
 .story-section {
   scroll-snap-align: start;
   scroll-snap-stop: always;
   min-height: 100vh;
-  height: 100vh;
+  min-height: 100dvh; /* Dynamic viewport height */
+  height: auto;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding-top: 80px; /* Account for fixed header */
+  padding-bottom: 40px;
   view-timeline-name: --section;
   view-timeline-axis: block;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .story-section {
+    padding-top: 100px;
+    padding-bottom: 60px;
+    min-height: 100dvh;
+    height: auto;
+  }
 }
 
 /* Custom fonts helper classes */
@@ -242,4 +272,102 @@ html, body {
 }
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.4);
+}
+
+/* ========================================================
+   MOBILE-FIRST RESPONSIVE FIXES
+   ======================================================== */
+
+/* Prevent text from being too small on mobile */
+@media (max-width: 640px) {
+  html {
+    font-size: 16px;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  /* Ensure touch targets are large enough */
+  button, a, input, textarea {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Fix liquid glass cards on small screens */
+  .liquid-card {
+    border-radius: 1rem;
+  }
+
+  /* Prevent horizontal overflow */
+  * {
+    max-width: 100%;
+  }
+
+  img, video {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+/* Tablet adjustments */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .story-section {
+    padding-top: 90px;
+    padding-bottom: 50px;
+  }
+}
+
+/* Ensure fixed elements don't block content on mobile */
+@media (max-width: 768px) {
+  header {
+    padding: 0.75rem 1rem !important;
+  }
+
+  /* Adjust backdrop blur for performance on mobile */
+  .liquid-glass,
+  .liquid-glass-strong,
+  .liquid-card {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+}
+
+/* Safe area insets for notched devices */
+@supports (padding: max(0px)) {
+  html, body {
+    padding-left: max(0px, env(safe-area-inset-left));
+    padding-right: max(0px, env(safe-area-inset-right));
+  }
+
+  .story-section {
+    padding-left: max(1.5rem, env(safe-area-inset-left));
+    padding-right: max(1.5rem, env(safe-area-inset-right));
+    padding-bottom: max(2.5rem, env(safe-area-inset-bottom));
+  }
+
+  header {
+    padding-left: max(1.5rem, env(safe-area-inset-left)) !important;
+    padding-right: max(1.5rem, env(safe-area-inset-right)) !important;
+    padding-top: max(1.25rem, env(safe-area-inset-top)) !important;
+  }
+}
+
+/* Improve touch scrolling */
+.story-scroll-container {
+  -webkit-overflow-scrolling: touch;
+  scroll-padding-top: 80px;
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .story-scroll-container {
+    scroll-snap-type: none;
+  }
 }
