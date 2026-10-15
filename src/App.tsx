@@ -591,12 +591,19 @@ export default function App() {
     setWorkspaceModalOpen(false);
   };
 
+  // Helper to ensure assets resolve properly on GitHub Pages and custom subpaths
+  const getAsset = (relPath: string) => {
+    const base = import.meta.env.BASE_URL || './';
+    const clean = relPath.replace(/^\//, '');
+    return base.endsWith('/') ? `${base}${clean}` : `${base}/${clean}`;
+  };
+
   // Current active profile photo path
   const currentPhotoSrc = useMemo(() => {
     if (customPhotoUrl) return customPhotoUrl;
-    if (activePhoto === 'golden') return '/images/paulo-golden.jpg';
-    if (activePhoto === 'workspace') return workspacePhotoUrl || '/images/paulo-workspace.jpg';
-    return '/images/paulo-red-suit.jpg';
+    if (activePhoto === 'golden') return getAsset('images/paulo-golden.jpg');
+    if (activePhoto === 'workspace') return workspacePhotoUrl || getAsset('images/paulo-workspace.jpg');
+    return getAsset('images/paulo-red-suit.jpg');
   }, [activePhoto, customPhotoUrl, workspacePhotoUrl]);
 
   const STORY_STAGES = [
@@ -630,8 +637,8 @@ export default function App() {
             style={{ opacity: videoOpacity }}
           >
             {customVideoUrl && <source src={customVideoUrl} type="video/mp4" />}
-            <source src="/Video.mp4" type="video/mp4" />
-            <source src="/videos/motion.mp4" type="video/mp4" />
+            <source src={getAsset('Video.mp4')} type="video/mp4" />
+            <source src={getAsset('videos/motion.mp4')} type="video/mp4" />
           </video>
         )}
         <div className="absolute inset-0 bg-gradient-to-b from-black/75 via-black/40 to-black/90 z-10" />
@@ -1100,7 +1107,7 @@ export default function App() {
                 <div className="lg:col-span-5 relative group">
                   <div className="relative rounded-2xl overflow-hidden aspect-[4/3] bg-neutral-900 border border-white/10 shadow-xl">
                     <img
-                      src={workspacePhotoUrl || '/images/paulo-workspace.jpg'}
+                      src={workspacePhotoUrl || getAsset('images/paulo-workspace.jpg')}
                       alt="Paulo's Technical Workspace"
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                     />
@@ -1695,7 +1702,7 @@ export default function App() {
               <div className="p-3 rounded-xl liquid-glass border border-white/10 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <img
-                    src={workspacePhotoUrl || '/images/paulo-workspace.jpg'}
+                    src={workspacePhotoUrl || getAsset('images/paulo-workspace.jpg')}
                     alt="Current Workspace"
                     className="w-12 h-12 rounded-lg object-cover"
                   />

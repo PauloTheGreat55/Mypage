@@ -47,6 +47,7 @@ function uploadPlugin(): Plugin {
 
 export default defineConfig(() => {
   return {
+    base: './',
     plugins: [react(), tailwindcss(), uploadPlugin()],
     resolve: {
       alias: {
