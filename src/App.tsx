@@ -18,31 +18,23 @@ import {
   Send,
   Globe,
   X,
-  Camera,
-  Upload,
   Film,
-  Edit3,
   Smartphone,
-  Tablet,
   Monitor,
-  Settings,
   ChevronDown,
   ShoppingBag,
   Code2,
   Wrench,
   Terminal,
   Cpu,
-  RotateCcw,
   Linkedin,
-  Facebook
+  Facebook,
+  Camera,
+  Upload
 } from 'lucide-react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import {
-  saveVideoToIndexedDB,
-  getVideoFromIndexedDB,
-  deleteVideoFromIndexedDB
-} from './utils/videoDb.ts';
+import { getVideoFromIndexedDB } from './utils/videoDb.ts';
 
 // Register GSAP plugins
 if (typeof window !== 'undefined') {
@@ -85,7 +77,7 @@ const SKILLS_DATA: SkillItem[] = [
     category: 'it',
     icon: '🛠️',
     description: 'Hardware and software troubleshooting, operating systems triage (macOS, Windows, iOS), network connectivity diagnosis, SaaS provisioning, and remote setup.',
-    tools: ['Hardware Diagnostics', 'macOS & Windows', 'Network Triage', 'SaaS Admin'],
+    tools: ['Hardware Diagnostics', 'Windows & macOS', 'Network Triage', 'SaaS Admin'],
     level: 'Core Technical Skill'
   },
   {
@@ -142,32 +134,17 @@ export default function App() {
   const [copied, setCopied] = useState(false);
   const [copiedSocial, setCopiedSocial] = useState<string | null>(null);
 
-  // Profile photo state (defaulting to the red suit portrait)
-  const [activePhoto, setActivePhoto] = useState<'red-suit' | 'golden' | 'workspace'>('red-suit');
-  const [customPhotoUrl, setCustomPhotoUrl] = useState<string | null>(() => {
-    try {
-      return localStorage.getItem('paulo_portfolio_custom_photo');
-    } catch {
-      return null;
-    }
-  });
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
-
-  // Repeating Video Background state
+  // Repeating Finalized Video Background state
   const [videoMotionEnabled, setVideoMotionEnabled] = useState(true);
   const [customVideoUrl, setCustomVideoUrl] = useState<string | null>(null);
-  const [videoOpacity, setVideoOpacity] = useState<number>(0.52);
-  const [videoStatusMessage, setVideoStatusMessage] = useState<string | null>(null);
   const videoBgRef = useRef<HTMLVideoElement | null>(null);
-  const videoInputRef = useRef<HTMLInputElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   // Audio effect state
   const [soundEnabled, setSoundEnabled] = useState(false);
   const audioContextRef = useRef<AudioContext | null>(null);
 
-  // Modals
-  const [workspaceModalOpen, setWorkspaceModalOpen] = useState(false);
+  // Credential Modal
   const [selectedCert, setSelectedCert] = useState<{
     title: string;
     issuer: string;
@@ -178,35 +155,40 @@ export default function App() {
     isDegree?: boolean;
   } | null>(null);
 
-  // Paulo's Technical Workspace Customizable Specs State
-  const [workspaceSpecs, setWorkspaceSpecs] = useState(() => {
-    const defaultData = {
-      title: "Paulo's Technical Workspace & Rig",
-      subtitle: 'Daily Hardware & Tech Stack',
-      hardwareHeadline: 'iPhone 13 & iPad 11th Gen dual-screen setup for fast response & IT monitoring',
-      phone: 'Apple iPhone 13 (High-priority communications, chat alerts & authentication)',
-      tablet: 'Apple iPad 11th Gen (Calendar dashboard, meeting notes, Asana & diagnostic logs)',
-      displays: 'Ultra-wide primary display + iPad auxiliary sidecar monitor',
-      ecosystem: 'Apple iCloud + Google Workspace native sync',
-      quote: 'My approach is simple: keep communication direct, eliminate bottlenecks, leverage my BSCS programming and IT support background, and get tasks done accurately on time.'
-    };
+  // Finalized Technical Workspace & Hardware Rig Specs
+  const workspaceSpecs = useMemo(() => ({
+    title: "Paulo's Technical Workspace & Rig",
+    subtitle: 'Daily Hardware & Tech Stack',
+    hardwareHeadline: 'iPhone 13 & Windows 11 Pro multi-screen workstation for rapid response & IT monitoring',
+    phone: 'Apple iPhone 13 (High-priority communications, chat alerts & mobile authentication)',
+    windowsRig: 'Windows 11 Pro Workstation (System diagnostics, Asana dashboards, terminal & IT monitoring)',
+    displays: 'Ultra-wide primary curved monitor + auxiliary diagnostic displays',
+    ecosystem: 'Windows 11 Pro + Apple iOS + Google Workspace cloud sync',
+    quote: 'My approach is simple: keep communication direct, eliminate bottlenecks, leverage my BSCS programming and IT support background, and get tasks done accurately on time.'
+  }), []);
+
+  // Helper to ensure assets resolve properly on GitHub Pages and custom subpaths
+  const getAsset = (relPath: string) => {
+    const base = import.meta.env.BASE_URL || './';
+    const clean = relPath.replace(/^\//, '');
+    return base.endsWith('/') ? `${base}${clean}` : `${base}/${clean}`;
+  };
+
+  // Permanent official portrait source using your newly uploaded photo
+  const currentPhotoSrc = useMemo(() => {
     try {
-      const saved = localStorage.getItem('paulo_workspace_specs');
-      if (saved) return JSON.parse(saved);
+      const saved = localStorage.getItem('paulo_portfolio_custom_photo');
+      if (saved) return saved;
     } catch {
       // fallback
     }
-    return defaultData;
-  });
+    return getAsset('images/paulo-red-suit.jpg');
+  }, []);
 
-  const [workspacePhotoUrl, setWorkspacePhotoUrl] = useState<string | null>(() => {
-    try {
-      return localStorage.getItem('paulo_workspace_photo');
-    } catch {
-      return null;
-    }
-  });
-  const workspaceFileInputRef = useRef<HTMLInputElement | null>(null);
+  // Finalized workspace photo source
+  const workspacePhotoSrc = useMemo(() => {
+    return getAsset('images/paulo-workspace.jpg');
+  }, []);
 
   // Form state
   const [formData, setFormData] = useState({
@@ -237,7 +219,7 @@ export default function App() {
     return () => clearInterval(interval);
   }, []);
 
-  // Load persisted custom video from IndexedDB on initial mount
+  // Load any previously persisted video if available
   useEffect(() => {
     let active = true;
     (async () => {
@@ -246,7 +228,6 @@ export default function App() {
         if (storedBlob && active) {
           const url = URL.createObjectURL(storedBlob);
           setCustomVideoUrl(url);
-          setVideoMotionEnabled(true);
         }
       } catch {
         // ignore
@@ -257,7 +238,7 @@ export default function App() {
     };
   }, []);
 
-  // Ensure video plays repeatedly
+  // Ensure background video plays repeatedly
   useEffect(() => {
     if (videoBgRef.current && videoMotionEnabled) {
       videoBgRef.current.play().catch(() => {
@@ -509,103 +490,6 @@ export default function App() {
     setFormSubmitted(true);
   };
 
-  // Custom photo upload handlers
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const result = event.target?.result as string;
-        setCustomPhotoUrl(result);
-        try {
-          localStorage.setItem('paulo_portfolio_custom_photo', result);
-        } catch {
-          // ignore
-        }
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleWorkspacePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const result = event.target?.result as string;
-        setWorkspacePhotoUrl(result);
-        try {
-          localStorage.setItem('paulo_workspace_photo', result);
-        } catch {
-          // ignore
-        }
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  // Background Video Upload handler with IndexedDB persistence
-  const handleVideoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const url = URL.createObjectURL(file);
-      setCustomVideoUrl(url);
-      setVideoMotionEnabled(true);
-      playSubtleClick();
-      setVideoStatusMessage('Custom video loaded! Playing continuously on loop.');
-
-      try {
-        await saveVideoToIndexedDB(file);
-      } catch (err) {
-        console.warn('Could not persist video in IndexedDB', err);
-      }
-
-      setTimeout(() => {
-        setVideoStatusMessage(null);
-      }, 5000);
-    }
-  };
-
-  const handleResetVideo = async () => {
-    playSubtleClick();
-    setCustomVideoUrl(null);
-    try {
-      await deleteVideoFromIndexedDB();
-    } catch {
-      // ignore
-    }
-    setVideoStatusMessage('Reset to ambient background loop.');
-    setTimeout(() => {
-      setVideoStatusMessage(null);
-    }, 3500);
-  };
-
-  const saveWorkspaceSpecs = (e: React.FormEvent) => {
-    e.preventDefault();
-    playSubtleClick();
-    try {
-      localStorage.setItem('paulo_workspace_specs', JSON.stringify(workspaceSpecs));
-    } catch {
-      // ignore
-    }
-    setWorkspaceModalOpen(false);
-  };
-
-  // Helper to ensure assets resolve properly on GitHub Pages and custom subpaths
-  const getAsset = (relPath: string) => {
-    const base = import.meta.env.BASE_URL || './';
-    const clean = relPath.replace(/^\//, '');
-    return base.endsWith('/') ? `${base}${clean}` : `${base}/${clean}`;
-  };
-
-  // Current active profile photo path
-  const currentPhotoSrc = useMemo(() => {
-    if (customPhotoUrl) return customPhotoUrl;
-    if (activePhoto === 'golden') return getAsset('images/paulo-golden.jpg');
-    if (activePhoto === 'workspace') return workspacePhotoUrl || getAsset('images/paulo-workspace.jpg');
-    return getAsset('images/paulo-red-suit.jpg');
-  }, [activePhoto, customPhotoUrl, workspacePhotoUrl]);
-
   const STORY_STAGES = [
     { id: 'stage-0', name: 'Overview & Tech' },
     { id: 'stage-1', name: 'Hardware & Rig' },
@@ -623,18 +507,18 @@ export default function App() {
         <div className="absolute bottom-10 left-10 w-[450px] h-[450px] bg-neutral-900/40 rounded-full blur-[120px]" />
       </div>
 
-      {/* Repeating Video Background Layer across all scenes - loops repeatedly right on the first screen */}
+      {/* Finalized Repeating Video Background Layer - plays repeatedly on loop */}
       <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
         {videoMotionEnabled && (
           <video
             ref={videoBgRef}
-            key={customVideoUrl || 'default-loop'}
+            key={customVideoUrl || 'finalized-loop'}
             autoPlay
             loop
             muted
             playsInline
             className="w-full h-full object-cover transition-opacity duration-1000 scale-105"
-            style={{ opacity: videoOpacity }}
+            style={{ opacity: 0.55 }}
           >
             {customVideoUrl && <source src={customVideoUrl} type="video/mp4" />}
             <source src={getAsset('Video.mp4')} type="video/mp4" />
@@ -652,7 +536,7 @@ export default function App() {
         {/* Brand Logo */}
         <button
           onClick={() => scrollToStage(0)}
-          className="pointer-events-auto w-11 h-11 liquid-glass rounded-2xl flex items-center justify-center font-heading italic text-2xl text-white hover:scale-105 transition-transform"
+          className="pointer-events-auto w-11 h-11 liquid-glass rounded-2xl flex items-center justify-center font-heading italic text-2xl text-white hover:scale-105 transition-transform cursor-pointer"
         >
           P
         </button>
@@ -663,7 +547,7 @@ export default function App() {
             <button
               key={s.id}
               onClick={() => scrollToStage(idx)}
-              className={`px-3 py-1 text-xs font-medium tracking-wide rounded-full transition-all flex items-center gap-1.5 ${
+              className={`px-3 py-1 text-xs font-medium tracking-wide rounded-full transition-all flex items-center gap-1.5 cursor-pointer ${
                 activeStoryStage === idx
                   ? 'bg-white/20 text-white font-semibold shadow-inner'
                   : 'text-white/60 hover:text-white'
@@ -688,32 +572,6 @@ export default function App() {
 
         {/* Action Controls */}
         <div className="pointer-events-auto flex items-center gap-2">
-          {/* Upload / Change Background Video Button in Header */}
-          <button
-            onClick={() => {
-              videoInputRef.current?.click();
-              playSubtleClick();
-            }}
-            title="Upload custom background video to play repeatedly"
-            className="liquid-glass hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs text-white/80 hover:text-white transition-colors cursor-pointer border border-emerald-500/30"
-          >
-            <Film className="w-3.5 h-3.5 text-emerald-400" />
-            <span className="text-[11px]">{customVideoUrl ? 'Change Video' : 'Upload Video'}</span>
-          </button>
-
-          {/* Video Motion Toggle Pill */}
-          <button
-            onClick={() => {
-              setVideoMotionEnabled(!videoMotionEnabled);
-              playSubtleClick();
-            }}
-            title="Toggle background video motion"
-            className="liquid-glass hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs text-white/70 hover:text-white transition-colors"
-          >
-            <span className={`w-2 h-2 rounded-full ${videoMotionEnabled ? 'bg-emerald-400 animate-pulse' : 'bg-white/30'}`} />
-            <span className="text-[11px]">{videoMotionEnabled ? 'Motion On' : 'Paused'}</span>
-          </button>
-
           {/* Sound toggle */}
           <button
             onClick={() => {
@@ -733,7 +591,7 @@ export default function App() {
           {/* Mobile menu */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden w-11 h-11 liquid-glass rounded-2xl flex flex-col items-center justify-center gap-1.5 focus:outline-none"
+            className="md:hidden w-11 h-11 liquid-glass rounded-2xl flex flex-col items-center justify-center gap-1.5 focus:outline-none cursor-pointer"
             aria-label="Toggle Navigation"
           >
             <span
@@ -763,7 +621,7 @@ export default function App() {
       >
         <button
           onClick={() => setMobileMenuOpen(false)}
-          className="absolute top-6 right-6 p-2 text-white/60 hover:text-white"
+          className="absolute top-6 right-6 p-2 text-white/60 hover:text-white cursor-pointer"
         >
           <X className="w-7 h-7" />
         </button>
@@ -775,24 +633,11 @@ export default function App() {
               scrollToStage(idx);
               setMobileMenuOpen(false);
             }}
-            className="text-white/80 hover:text-white text-2xl font-heading italic"
+            className="text-white/80 hover:text-white text-2xl font-heading italic cursor-pointer"
           >
             {s.name}
           </button>
         ))}
-
-        <div className="pt-4 flex flex-col gap-2 w-full max-w-xs">
-          <button
-            onClick={() => {
-              videoInputRef.current?.click();
-              setMobileMenuOpen(false);
-            }}
-            className="w-full py-2.5 rounded-full liquid-glass text-sm text-emerald-400 flex items-center justify-center gap-2"
-          >
-            <Film className="w-4 h-4" />
-            <span>Upload Background Video</span>
-          </button>
-        </div>
       </div>
 
       {/* Mandatory Snapping Scroll Container */}
@@ -805,22 +650,6 @@ export default function App() {
             STAGE 1: OVERVIEW & TECH STACK (HERO SECTION)
             ======================================================== */}
         <section id="stage-0" className="story-section px-6 lg:px-12">
-          {/* Hidden file inputs for photo and video */}
-          <input
-            type="file"
-            ref={fileInputRef}
-            onChange={handleFileUpload}
-            accept="image/*"
-            className="hidden"
-          />
-          <input
-            type="file"
-            ref={videoInputRef}
-            onChange={handleVideoUpload}
-            accept="video/mp4,video/webm,video/ogg,video/quicktime"
-            className="hidden"
-          />
-
           <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-10 items-center hero-shrink-target">
             <div className="lg:col-span-7 space-y-5 text-center lg:text-left">
               {/* Badges */}
@@ -892,58 +721,7 @@ export default function App() {
                   <span>Explore Tech Rig</span>
                   <ChevronDown className="w-4 h-4 text-emerald-400 animate-bounce" />
                 </button>
-
-                {/* Prominent Upload Background Video Button */}
-                <button
-                  onClick={() => {
-                    videoInputRef.current?.click();
-                    playSubtleClick();
-                  }}
-                  title="Upload your MP4/WebM video to play repeatedly on the motion background"
-                  className="liquid-glass rounded-full px-4 py-2.5 text-xs font-medium text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/10 transition-all flex items-center gap-2 border border-emerald-500/30 cursor-pointer shadow-lg"
-                >
-                  <Film className="w-3.5 h-3.5" />
-                  <span>{customVideoUrl ? 'Change Background Video' : 'Upload Background Video'}</span>
-                </button>
-
-                {customVideoUrl && (
-                  <button
-                    onClick={handleResetVideo}
-                    title="Reset to default background"
-                    className="liquid-glass rounded-full p-2.5 text-xs text-white/60 hover:text-white transition-all cursor-pointer"
-                  >
-                    <RotateCcw className="w-3.5 h-3.5" />
-                  </button>
-                )}
               </div>
-
-              {/* Video status indicator banner if custom video uploaded */}
-              {customVideoUrl && (
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl liquid-glass border border-emerald-500/30 text-xs text-emerald-300">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-                  <span>Custom background video active · Playing repeatedly on loop</span>
-                  <div className="flex items-center gap-1.5 ml-2 pl-2 border-l border-white/10">
-                    <span className="text-[10px] text-white/50">Opacity:</span>
-                    {[0.4, 0.6, 0.85].map((op) => (
-                      <button
-                        key={op}
-                        onClick={() => setVideoOpacity(op)}
-                        className={`px-1.5 py-0.5 rounded text-[10px] ${
-                          videoOpacity === op ? 'bg-emerald-400 text-black font-semibold' : 'text-white/60 hover:text-white'
-                        }`}
-                      >
-                        {Math.round(op * 100)}%
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {videoStatusMessage && (
-                <div className="p-2 rounded-xl liquid-glass border border-emerald-500/30 text-emerald-300 text-xs">
-                  {videoStatusMessage}
-                </div>
-              )}
 
               {/* Proof highlights */}
               <div className="pt-2 flex flex-wrap items-center justify-center lg:justify-start gap-4 text-xs text-white/70">
@@ -966,7 +744,7 @@ export default function App() {
               </div>
             </div>
 
-            {/* Right Card with Portrait & Photo Options */}
+            {/* Right Card with Permanent Official Portrait */}
             <div className="lg:col-span-5 flex flex-col items-center">
               <div className="relative w-full max-w-xs sm:max-w-sm group">
                 <div className="absolute -inset-1 rounded-3xl bg-gradient-to-b from-white/20 via-emerald-500/10 to-transparent blur-md opacity-70 group-hover:opacity-100 transition duration-700" />
@@ -985,19 +763,7 @@ export default function App() {
                       </span>
                     </div>
 
-                    {/* Floating camera upload button */}
-                    <button
-                      onClick={() => {
-                        fileInputRef.current?.click();
-                        playSubtleClick();
-                      }}
-                      title="Upload or replace photo"
-                      className="absolute bottom-4 right-4 w-9 h-9 rounded-full bg-black/70 backdrop-blur-md border border-white/20 text-white flex items-center justify-center hover:bg-white hover:text-black transition-all shadow-lg z-20 cursor-pointer"
-                    >
-                      <Camera className="w-4 h-4" />
-                    </button>
-
-                    <div className="absolute bottom-4 left-4 right-16 pointer-events-none">
+                    <div className="absolute bottom-4 left-4 right-4 pointer-events-none">
                       <div className="text-xs uppercase tracking-wider text-emerald-400 font-semibold mb-0.5">
                         Paulo Peñaflor
                       </div>
@@ -1006,47 +772,6 @@ export default function App() {
                       </div>
                     </div>
                   </div>
-
-                  <div className="mt-3 pt-2.5 border-t border-white/10 flex items-center justify-between text-xs">
-                    <div className="flex items-center gap-1.5">
-                      <button
-                        onClick={() => {
-                          setActivePhoto('red-suit');
-                          setCustomPhotoUrl(null);
-                          playSubtleClick();
-                        }}
-                        className={`px-2 py-0.5 rounded text-[10px] transition-colors cursor-pointer ${
-                          activePhoto === 'red-suit' && !customPhotoUrl
-                            ? 'bg-red-900/60 text-red-200 border border-red-500/40'
-                            : 'text-white/50 hover:text-white'
-                        }`}
-                      >
-                        Red Suit
-                      </button>
-                      <button
-                        onClick={() => {
-                          setActivePhoto('golden');
-                          setCustomPhotoUrl(null);
-                          playSubtleClick();
-                        }}
-                        className={`px-2 py-0.5 rounded text-[10px] transition-colors cursor-pointer ${
-                          activePhoto === 'golden' && !customPhotoUrl
-                            ? 'bg-amber-900/60 text-amber-200 border border-amber-500/40'
-                            : 'text-white/50 hover:text-white'
-                        }`}
-                      >
-                        Golden
-                      </button>
-                    </div>
-
-                    <button
-                      onClick={() => fileInputRef.current?.click()}
-                      className="text-emerald-400 hover:underline flex items-center gap-1 text-[11px] cursor-pointer"
-                    >
-                      <Upload className="w-3 h-3" />
-                      <span>{customPhotoUrl ? 'Custom Loaded' : 'Upload Pic'}</span>
-                    </button>
-                  </div>
                 </div>
               </div>
             </div>
@@ -1054,75 +779,41 @@ export default function App() {
         </section>
 
         {/* ========================================================
-            STAGE 2: PAULO'S TECHNICAL WORKSPACE & HARDWARE RIG (CLIP-PATH REVEAL)
+            STAGE 2: PAULO'S TECHNICAL WORKSPACE & HARDWARE RIG (WINDOWS)
             ======================================================== */}
         <section id="stage-1" className="story-section px-6 lg:px-12">
-          {/* Hidden workspace photo input */}
-          <input
-            type="file"
-            ref={workspaceFileInputRef}
-            onChange={handleWorkspacePhotoUpload}
-            accept="image/*"
-            className="hidden"
-          />
-
           <div className="max-w-6xl mx-auto w-full clip-reveal-target">
             <div className="liquid-card p-6 sm:p-10 border border-white/15 bg-neutral-950/80 backdrop-blur-2xl shadow-2xl relative overflow-hidden">
-              {/* Header with edit button */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-white/10">
-                <div>
-                  <span className="text-xs uppercase font-mono tracking-widest text-emerald-400 block mb-1">
-                    {workspaceSpecs.subtitle}
-                  </span>
-                  <h2 className="text-3xl sm:text-5xl font-heading italic text-white">
-                    {workspaceSpecs.title}
-                  </h2>
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => {
-                      setWorkspaceModalOpen(true);
-                      playSubtleClick();
-                    }}
-                    className="liquid-glass px-4 py-2 rounded-full text-xs font-medium text-white flex items-center gap-1.5 hover:bg-white/10 transition-colors border border-white/10 cursor-pointer"
-                  >
-                    <Edit3 className="w-3.5 h-3.5 text-emerald-400" />
-                    <span>Change Picture & Specs Info</span>
-                  </button>
-
-                  <button
-                    onClick={() => workspaceFileInputRef.current?.click()}
-                    title="Quick upload workspace photo"
-                    className="w-9 h-9 liquid-glass rounded-full flex items-center justify-center text-white/70 hover:text-white cursor-pointer"
-                  >
-                    <Camera className="w-4 h-4" />
-                  </button>
-                </div>
+              {/* Header */}
+              <div className="pb-6 border-b border-white/10">
+                <span className="text-xs uppercase font-mono tracking-widest text-emerald-400 block mb-1">
+                  {workspaceSpecs.subtitle}
+                </span>
+                <h2 className="text-3xl sm:text-5xl font-heading italic text-white">
+                  {workspaceSpecs.title}
+                </h2>
               </div>
 
               {/* Workspace Content Grid */}
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center pt-6">
-                {/* Workspace photo */}
+                {/* Finalized Workspace photo */}
                 <div className="lg:col-span-5 relative group">
                   <div className="relative rounded-2xl overflow-hidden aspect-[4/3] bg-neutral-900 border border-white/10 shadow-xl">
                     <img
-                      src={workspacePhotoUrl || getAsset('images/paulo-workspace.jpg')}
+                      src={workspacePhotoSrc}
                       alt="Paulo's Technical Workspace"
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
-                    <button
-                      onClick={() => workspaceFileInputRef.current?.click()}
-                      className="absolute bottom-3 right-3 p-2 rounded-full bg-black/70 backdrop-blur-md border border-white/20 text-white hover:bg-white hover:text-black transition-all text-xs flex items-center gap-1 cursor-pointer"
-                    >
-                      <Camera className="w-3.5 h-3.5" />
-                      <span className="text-[10px]">Change Photo</span>
-                    </button>
+                    <div className="absolute bottom-3 left-3 pointer-events-none">
+                      <span className="text-[11px] font-mono text-emerald-400">
+                        Dual Monitor & Windows Workstation
+                      </span>
+                    </div>
                   </div>
                 </div>
 
-                {/* Hardware Specs & Philosophy */}
+                {/* Finalized Hardware Specs & Windows Rig */}
                 <div className="lg:col-span-7 space-y-5">
                   <div className="p-3.5 rounded-xl liquid-glass border border-emerald-500/20">
                     <span className="text-xs text-emerald-400 font-semibold block mb-0.5">
@@ -1134,6 +825,7 @@ export default function App() {
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-white/80">
+                    {/* Mobile Hub */}
                     <div className="liquid-glass p-3 rounded-xl flex items-start gap-2.5">
                       <Smartphone className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
                       <div>
@@ -1142,14 +834,16 @@ export default function App() {
                       </div>
                     </div>
 
-                    <div className="liquid-glass p-3 rounded-xl flex items-start gap-2.5">
-                      <Tablet className="w-4 h-4 text-blue-400 shrink-0 mt-0.5" />
+                    {/* Windows Rig - requested by user */}
+                    <div className="liquid-glass p-3 rounded-xl flex items-start gap-2.5 border border-sky-500/20 bg-sky-950/10">
+                      <Cpu className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
                       <div>
-                        <strong className="text-white block font-medium">Tablet Rig:</strong>
-                        <span>{workspaceSpecs.tablet}</span>
+                        <strong className="text-white block font-medium">Windows Rig:</strong>
+                        <span>{workspaceSpecs.windowsRig}</span>
                       </div>
                     </div>
 
+                    {/* Displays */}
                     <div className="liquid-glass p-3 rounded-xl flex items-start gap-2.5">
                       <Monitor className="w-4 h-4 text-purple-400 shrink-0 mt-0.5" />
                       <div>
@@ -1158,16 +852,17 @@ export default function App() {
                       </div>
                     </div>
 
+                    {/* Cloud & Connectivity */}
                     <div className="liquid-glass p-3 rounded-xl flex items-start gap-2.5">
                       <Globe className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
                       <div>
-                        <strong className="text-white block font-medium">Cloud Connectivity:</strong>
+                        <strong className="text-white block font-medium">Cloud & OS Connectivity:</strong>
                         <span>{workspaceSpecs.ecosystem}</span>
                       </div>
                     </div>
                   </div>
 
-                  {/* Personal Quote */}
+                  {/* Personal Work Quote */}
                   <blockquote className="p-4 rounded-xl liquid-glass border-l-2 border-emerald-400 text-white/90 italic text-sm leading-relaxed">
                     "{workspaceSpecs.quote}"
                   </blockquote>
@@ -1310,8 +1005,8 @@ export default function App() {
                     title: 'IT Support & Systems Diagnostics',
                     issuer: 'Technical Systems & Operations',
                     date: 'Active Daily Practice',
-                    desc: 'Comprehensive hands-on IT technical support across operating systems (macOS, Windows, iOS, Android), workstation hardware management, network connectivity troubleshooting, diagnostic triage, and SaaS application administration.',
-                    skills: ['Hardware Diagnostics', 'macOS & Windows', 'Network Troubleshooting', 'Helpdesk Ticket Resolution', 'Remote Desktop Support'],
+                    desc: 'Comprehensive hands-on IT technical support across operating systems (Windows, macOS, iOS, Android), workstation hardware management, network connectivity troubleshooting, diagnostic triage, and SaaS application administration.',
+                    skills: ['Hardware Diagnostics', 'Windows & macOS', 'Network Troubleshooting', 'Helpdesk Ticket Resolution', 'Remote Desktop Support'],
                     credentialId: 'IT-SUPPORT-SYS-TRIAGE'
                   });
                   playSubtleClick();
@@ -1673,149 +1368,6 @@ export default function App() {
           </div>
         </section>
       </div>
-
-      {/* ========================================================
-          MODAL: EDIT WORKSPACE SPECS & PICTURE
-          ======================================================== */}
-      {workspaceModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-xl animate-in fade-in duration-200">
-          <div className="relative w-full max-w-lg liquid-card p-6 sm:p-8 border border-white/20 max-h-[90vh] overflow-y-auto">
-            <button
-              onClick={() => setWorkspaceModalOpen(false)}
-              className="absolute top-5 right-5 p-2 rounded-full liquid-glass hover:bg-white/10 text-white/70 hover:text-white cursor-pointer"
-            >
-              <X className="w-5 h-5" />
-            </button>
-
-            <div className="flex items-center gap-3 mb-5">
-              <div className="w-10 h-10 rounded-2xl liquid-glass flex items-center justify-center text-emerald-400">
-                <Settings className="w-5 h-5" />
-              </div>
-              <div>
-                <h3 className="text-xl font-heading italic text-white">Customize Workspace Specs</h3>
-                <p className="text-white/50 text-xs">Update your hardware models, tech rig, and workspace picture</p>
-              </div>
-            </div>
-
-            <form onSubmit={saveWorkspaceSpecs} className="space-y-4 text-xs">
-              {/* Photo section */}
-              <div className="p-3 rounded-xl liquid-glass border border-white/10 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <img
-                    src={workspacePhotoUrl || getAsset('images/paulo-workspace.jpg')}
-                    alt="Current Workspace"
-                    className="w-12 h-12 rounded-lg object-cover"
-                  />
-                  <div>
-                    <span className="text-white font-medium block">Workspace Photo</span>
-                    <span className="text-white/50 text-[10px]">JPG, PNG or WebP</span>
-                  </div>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() => workspaceFileInputRef.current?.click()}
-                  className="px-3 py-1.5 rounded-full liquid-glass text-white/80 hover:text-white flex items-center gap-1 text-[11px] cursor-pointer"
-                >
-                  <Camera className="w-3 h-3 text-emerald-400" />
-                  <span>Upload Picture</span>
-                </button>
-              </div>
-
-              <div>
-                <label className="block text-white/70 mb-1">Section Title</label>
-                <input
-                  type="text"
-                  value={workspaceSpecs.title}
-                  onChange={(e) => setWorkspaceSpecs({ ...workspaceSpecs, title: e.target.value })}
-                  className="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-white"
-                />
-              </div>
-
-              <div>
-                <label className="block text-white/70 mb-1">Hardware Headline</label>
-                <input
-                  type="text"
-                  value={workspaceSpecs.hardwareHeadline}
-                  onChange={(e) => setWorkspaceSpecs({ ...workspaceSpecs, hardwareHeadline: e.target.value })}
-                  className="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-white"
-                />
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-white/70 mb-1">Phone Model</label>
-                  <input
-                    type="text"
-                    value={workspaceSpecs.phone}
-                    onChange={(e) => setWorkspaceSpecs({ ...workspaceSpecs, phone: e.target.value })}
-                    className="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-white"
-                  />
-                </div>
-                <div>
-                  <label className="block text-white/70 mb-1">Tablet Model</label>
-                  <input
-                    type="text"
-                    value={workspaceSpecs.tablet}
-                    onChange={(e) => setWorkspaceSpecs({ ...workspaceSpecs, tablet: e.target.value })}
-                    className="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-white"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-white/70 mb-1">Display & Screens</label>
-                <input
-                  type="text"
-                  value={workspaceSpecs.displays}
-                  onChange={(e) => setWorkspaceSpecs({ ...workspaceSpecs, displays: e.target.value })}
-                  className="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-white"
-                />
-              </div>
-
-              <div>
-                <label className="block text-white/70 mb-1">Personal Work Quote</label>
-                <textarea
-                  rows={2}
-                  value={workspaceSpecs.quote}
-                  onChange={(e) => setWorkspaceSpecs({ ...workspaceSpecs, quote: e.target.value })}
-                  className="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-white resize-none"
-                />
-              </div>
-
-              <div className="pt-2 flex items-center justify-between">
-                <button
-                  type="button"
-                  onClick={() => {
-                    localStorage.removeItem('paulo_workspace_specs');
-                    localStorage.removeItem('paulo_workspace_photo');
-                    setWorkspacePhotoUrl(null);
-                    setWorkspaceSpecs({
-                      title: "Paulo's Technical Workspace & Rig",
-                      subtitle: 'Daily Hardware & Tech Stack',
-                      hardwareHeadline: 'iPhone 13 & iPad 11th Gen dual-screen setup for fast response & IT monitoring',
-                      phone: 'Apple iPhone 13 (High-priority communications, chat alerts & authentication)',
-                      tablet: 'Apple iPad 11th Gen (Calendar dashboard, meeting notes, Asana & diagnostic logs)',
-                      displays: 'Ultra-wide primary display + iPad auxiliary sidecar monitor',
-                      ecosystem: 'Apple iCloud + Google Workspace native sync',
-                      quote: 'My approach is simple: keep communication direct, eliminate bottlenecks, leverage my BSCS programming and IT support background, and get tasks done accurately on time.'
-                    });
-                  }}
-                  className="text-red-400 hover:underline text-[11px] cursor-pointer"
-                >
-                  Reset to Default Specs
-                </button>
-                <button
-                  type="submit"
-                  className="px-6 py-2.5 rounded-full bg-white text-black font-semibold hover:bg-white/90 text-xs cursor-pointer"
-                >
-                  Save Workspace Changes
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
 
       {/* ========================================================
           MODAL: CREDENTIAL / DEGREE VIEWER
